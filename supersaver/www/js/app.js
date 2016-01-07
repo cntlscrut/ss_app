@@ -36,6 +36,12 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
     controller: 'HomeCtrl'
   })
 
+  .state('search', {
+    url: '/search',
+    templateUrl: 'templates/search-view.html',
+    controller: 'SearchCtrl'
+  })
+
   //our default landing page. will eventually be switched to '/' for the splash page
   $urlRouterProvider.otherwise('/home');
 })
