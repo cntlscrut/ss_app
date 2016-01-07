@@ -35,4 +35,7 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
     templateUrl: 'templates/home-view.html',
     controller: 'HomeCtrl'
   })
+
+  //our default landing page. will eventually be switched to '/' for the splash page
+  $urlRouterProvider.otherwise('/home');
 })
