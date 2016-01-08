@@ -36,10 +36,39 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
     controller: 'HomeCtrl'
   })
 
+  // setup of the main view page for search/find deals
   .state('search', {
     url: '/search',
     templateUrl: 'templates/search-view.html',
     controller: 'SearchCtrl'
+  })
+
+  //create the top abstract page
+  .state('user', {
+    url: '/user',
+    abstract: true,
+    templateUrl: 'templates/user-tabs-view.html',
+    controller: 'UserTabsCtrl'
+  })
+
+  .state('user.history', {
+    url: '/history',
+    views: {
+      'tabs-history': {
+        templateUrl: 'templates/history-view.html',
+        controller: 'HistoryCtrl'
+      }
+    }
+  })
+
+  .state('user.favorites', {
+    url: '/favorites',
+    views: {
+      'tabs-favorites': {
+        templateUrl: 'templates/favorites-view.html',
+        controller: 'FavoritesCtrl'
+      }
+    }
   })
 
   //our default landing page. will eventually be switched to '/' for the splash page
