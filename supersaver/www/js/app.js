@@ -29,13 +29,24 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
 
+  .state('splash', {
+    url: '/',
+    templateUrl: 'templates/user-login.html',
+    controller: 'UserCtrl',
+    onEnter: function ($state, User) {
+      User.checkSession().then(function (hasSession) {
+        if (hasSession) $state.go('home');
+      });
+    }
+  })
+
   // set up the landing page at /home
   .state('home', {
     url: '/home',
     templateUrl: 'templates/home-view.html',
     controller: 'HomeCtrl'
   })
-
+/**
   // setup of the main view page for search/find deals
   .state('search', {
     url: '/search',
@@ -70,7 +81,42 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
       }
     }
   })
+*/
 
   //our default landing page. will eventually be switched to '/' for the splash page
-  $urlRouterProvider.otherwise('/home');
+  $urlRouterProvider.otherwise('/');
 })
+
+.config(['$httpProvider', function($httpProvider) {
+  $httpProvider.defaults.withCredentials = true;
+  delete $httpProvider.defaults.headers.common['X-Requested-With'];
+}])
+
+//basic server information
+.constant('SERVER', {
+  url: 'http://localhost:8888/'
+})
+
+//services api endpoints values
+.value('ServicesAPIEndpoints', {
+  'client': 'client/client',
+  'coupon': 'client/coupon',
+  'userHistory': 'client/user_history',
+  'userFavorites': 'client/user_favorites',
+  'token': 'services/session/token'
+}) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

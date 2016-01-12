@@ -1,6 +1,17 @@
 angular.module('supersaver.controllers', ['ionic', 'supersaver.services'])
 
 /**
+ * controller for the user
+ */
+.controller('UserCtrl', function($scope, User) {
+	$scope.user = 'user';
+	$scope.submitForm = function (username, password) {
+		User.login(username, password);
+	}
+})
+
+
+/**
  * Controller for the home view
  */
 .controller('HomeCtrl', function($scope, Clients) {
