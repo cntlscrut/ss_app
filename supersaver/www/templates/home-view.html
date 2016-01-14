@@ -1,5 +1,44 @@
 <ion-view view-title="Home" class="home-page">
-	<ion-content>
-		{{ hello }}, {{ client }}
-	</ion-content>
+    <!-- the views will be rendered in this region -->
+    <ion-side-menus>
+
+      <ion-side-menu side="left">
+        <header class="bar bar-header bar-stable">
+          <h2>Main Menu</h2>
+        </header>
+        <ion-content class="has-header">
+          <ion-list>
+            <ion-item menu-close href="#/home">Home</ion-item>
+            <ion-item menu-close href="#/search">Find Deals</ion-item>
+            <ion-item menu-close href="#/user/history">Your Deals</ion-item>
+            <ion-item menu-close href="#/user/favorites">Your Favorites</ion-item>
+          </ion-list>
+        </ion-content>
+      </ion-side-menu>
+
+      <ion-side-menu-content>
+
+        <ion-nav-bar class="bar-stable">
+          <ion-nav-buttons >
+            <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+            <button side="right" class="button" ng-click="logOut()">Log Out</button>
+          </ion-nav-buttons>
+        </ion-nav-bar>
+        <br/><br/>
+        <div class="front-content">
+        	<ion-list>
+        		<div ng-repeat="group in groups">
+        			<ion-item class="item-stable"
+        						ng-click="toggleGroup(group)"
+        						ng-class="{ active: isGroupShown(group)}">
+        				<h2>{{ group.title }}</h2>
+        			</ion-item>
+        			<ion-item class="item-accordion" ng-show="isGroupShown(group)">
+        				<div ui-view="{{ group.content }}"></div>
+        			</ion-item>
+        		</div>
+        	</ion-list>
+    	</div>
+      </ion-side-menu-content>
+    </ion-side-menus>
 </ion-view>

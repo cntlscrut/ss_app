@@ -35,6 +35,7 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
     controller: 'UserCtrl',
     onEnter: function ($state, User) {
       User.checkSession().then(function (hasSession) {
+        console.log("Session Check: "+hasSession);
         if (hasSession) $state.go('home');
       });
     }
@@ -43,10 +44,38 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
   // set up the landing page at /home
   .state('home', {
     url: '/home',
-    templateUrl: 'templates/home-view.html',
-    controller: 'HomeCtrl'
+    views: {
+      '': {
+        templateUrl: 'templates/home-view.html',
+        controller: 'HomeCtrl'
+      },
+      'home-nearby@home': {
+        templateUrl: 'templates/home-nearby-view.html',
+        controller: 'NearByCtrl'
+      }
+    },
+    //templateUrl: 'templates/home-view.html',
+    //controller: 'HomeCtrl',
+    // don't load the state until we've populated our User, if necessary.
+    resolve: {
+      populateSession: function(User) {
+        return User.checkSession();
+      }
+    },
+    onEnter: function ($state, User) {
+      User.checkSession().then(function (hasSession) {
+        console.log("Session Check: "+hasSession);
+        if (!hasSession) $state.go('splash');
+      });
+    }
   })
 /**
+  .state('nearBy', {
+    url: '/nearby',
+    templateUrl: 'templates/home-nearby-view.html',
+    controller: 'NearByCtrl'
+  })
+
   // setup of the main view page for search/find deals
   .state('search', {
     url: '/search',
@@ -97,15 +126,10 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
   url: 'http://localhost:8888/'
 })
 
-//services api endpoints values
-.value('ServicesAPIEndpoints', {
-  'client': 'client/client',
-  'coupon': 'client/coupon',
-  'userHistory': 'client/user_history',
-  'userFavorites': 'client/user_favorites',
-  'token': 'services/session/token'
-}) 
+//set the values for the menu pages
+.constant('MENU', {
 
+})
 
 
 

@@ -14,9 +14,51 @@ angular.module('supersaver.controllers', ['ionic', 'supersaver.services'])
 /**
  * Controller for the home view
  */
-.controller('HomeCtrl', function($scope, Clients) {
+.controller('HomeCtrl', function($scope, $window, User, Clients, NearBy, Featured, YourDeals) {
 	$scope.hello = 'hello home view';
 	$scope.client = Clients.client;
+
+	//create the object containing the front view content.
+	$scope.groups = {
+		'nearBy': {
+			'title': 'Nearby',
+			'content': 'home-nearby'
+		},
+		'featured': {
+			'title': 'Featured',
+			'content': Featured.content
+		},
+		'yourDeals': {
+			'title': 'Your Deals',
+			'content': YourDeals.content
+		}
+	}
+
+	$scope.toggleGroup = function (group) {
+	    if ($scope.isGroupShown(group)) {
+	      $scope.shownGroup = null;
+	    } else {
+	      $scope.shownGroup = group;
+	    }
+	}
+
+	$scope.isGroupShown = function (group) {
+		return $scope.shownGroup === group;
+	}
+
+	$scope.logOut = function () {
+		User.destroySession();
+
+		$window.location.href="index.html";
+	}
+})
+
+/**
+ * Controller for the nearby home nearby deals view
+ */
+.controller('NearByCtrl', function($scope, User, NearBy) {
+	//
+	$scope.content = 'hello this is nearby content';
 })
 
 /**
