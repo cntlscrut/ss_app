@@ -34,7 +34,7 @@
         				<h2>{{ group.title }}</h2>
         			</ion-item>
         			<ion-item class="item-accordion" ng-show="isGroupShown(group)">
-        				<div ui-view="{{ group.content }}"></div>
+        				<div class="accordion-content" ui-view="{{ group.content }}"></div>
         			</ion-item>
         		</div>
         	</ion-list>

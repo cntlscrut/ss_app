@@ -1,4 +1,4 @@
-angular.module('supersaver.controllers', ['ionic', 'supersaver.services'])
+angular.module('supersaver.controllers', ['ionic', 'ngCordova', 'supersaver.services'])
 
 /**
  * controller for the user
@@ -56,9 +56,9 @@ angular.module('supersaver.controllers', ['ionic', 'supersaver.services'])
 /**
  * Controller for the nearby home nearby deals view
  */
-.controller('NearByCtrl', function($scope, User, NearBy) {
+.controller('NearByCtrl', function($scope, $cordovaGeolocation, User, NearBy) {
 	//
-	$scope.content = 'hello this is nearby content';
+	$scope.content = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 })
 
 /**

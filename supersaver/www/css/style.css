@@ -8,6 +8,8 @@
   padding-top: 0;
   padding-bottom: 0;
   transition: 0.09s all linear;
+  display: inline-block;
+  width:100%;
 }
 .list .item.item-accordion.ng-hide {
   line-height: 0px;
@@ -15,4 +17,11 @@
 .list .item.item-accordion.ng-hide-add,
 .list .item.item-accordion.ng-hide-remove {
   display: block !important;
+}
+
+.accordion-content div { 
+	display:inline-block;
+	width: 50%;
+	margin: 30px;
+	text-align: center;
 }
