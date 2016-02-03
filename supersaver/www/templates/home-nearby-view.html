@@ -1,5 +1,23 @@
-<ion-view>
-	<ion-content>
-		<div>{{ content }}</div>
-	</ion-content>
+<ion-view view-title="Nearby" class="nearby-page">
+	<ion-slide-box does-continue="true" ng-if="groups.nearBy.items">
+	  <ion-slide ng-repeat="item in groups.nearBy.items track by $index" repeat-done="repeatDone()">
+	    <ion-content scroll='false'>
+		    <a href="#/client?client_id={{ item.client_id }}">
+		      <div class="card">
+		        <div class="item">
+		          <img ng-src="{{ item.client_image }}">
+		        </div>
+		        <div class="item">
+		        	<div class="client-info">
+		        		{{ item.client_info }}
+		        	</div>
+		        	<div class="client-deal-count">
+		        		Deals Available: {{ item.client_deal_count }}
+		        	</div>
+		        </div>
+		      </div>
+		    </a>
+	    </ion-content>
+	  </ion-slide>
+	</ion-slide-box>
 </ion-view>

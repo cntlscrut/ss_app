@@ -24,21 +24,22 @@
             <button side="right" class="button" ng-click="logOut()">Log Out</button>
           </ion-nav-buttons>
         </ion-nav-bar>
-        <br/><br/>
-        <div class="front-content">
-        	<ion-list>
-        		<div ng-repeat="group in groups">
-        			<ion-item class="item-stable"
-        						ng-click="toggleGroup(group)"
-        						ng-class="{ active: isGroupShown(group)}">
-        				<h2>{{ group.title }}</h2>
-        			</ion-item>
-        			<ion-item class="item-accordion" ng-show="isGroupShown(group)">
-        				<div class="accordion-content" ui-view="{{ group.content }}"></div>
-        			</ion-item>
-        		</div>
-        	</ion-list>
-    	</div>
+        <ion-tabs class="tabs-icon-top tabs-color-active-positive">
+
+
+        <!-- Discover Tab -->
+          <ion-tab title="Nearby" icon-off="ion-android-compass" icon-on="ion-android-compass" href="#/home/nearby">
+            <ion-nav-view name="tabs-nearby"></ion-nav-view>
+          </ion-tab>
+
+
+        <!-- Favorites Tab -->
+          <ion-tab title="Featured" icon-off="ion-ios-star" icon-on="ion-ios-star" href="#/home/featured">
+            <ion-nav-view name="tabs-featured"></ion-nav-view>
+          </ion-tab>
+
+
+        </ion-tabs>
       </ion-side-menu-content>
     </ion-side-menus>
 </ion-view>

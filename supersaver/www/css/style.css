@@ -3,25 +3,39 @@
 /*
  * http://docs.angularjs.org/api/ng/directive/ngShow#usage_animations
  */
-.list .item.item-accordion {
-  line-height: 38px;
-  padding-top: 0;
-  padding-bottom: 0;
-  transition: 0.09s all linear;
-  display: inline-block;
-  width:100%;
-}
-.list .item.item-accordion.ng-hide {
-  line-height: 0px;
-}
-.list .item.item-accordion.ng-hide-add,
-.list .item.item-accordion.ng-hide-remove {
-  display: block !important;
+
+.slider {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  -webkit-transform: translateZ(0);
+transform: translateZ(0);
 }
 
-.accordion-content div { 
-	display:inline-block;
-	width: 50%;
-	margin: 30px;
-	text-align: center;
+.slider-slide, .slider-slides {
+  width: 100%;
+}
+
+.slider-slide {
+  color: #000;
+  background-color: #ddd;
+  height: 100vh;
+    -webkit-transform: translateZ(0);
+transform: translateZ(0);
+}
+
+.button.ng-hide{
+  display:none;
+}
+
+.card, .scroll{
+  height: 90%;
+    -webkit-transform: translateZ(0);
+transform: translateZ(0);
+}
+
+.card img {
+  width: 100%;
 }

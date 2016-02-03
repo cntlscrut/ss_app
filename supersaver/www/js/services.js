@@ -1,5 +1,8 @@
 angular.module('supersaver.services', ['ionic.utils'])
 
+/**
+ * Main service for handling user authentication
+ */
 .factory('User', function ($http, $q, $localstorage, $state, SERVER) {
 	var o = {
 		username: false,
@@ -24,12 +27,12 @@ angular.module('supersaver.services', ['ionic.utils'])
 				'Content-Type': 'application/x-www-form-urlencoded',
 				'X-CSRF-Token': o.token
 			},
-			withCredentials: false
+			withCredentials: true
 		}).success(function (data, status, headers, config) {
 			console.log(data);
 			var userObject = data.user;
 			o.setSession(userObject.name, userObject.uid, data.sessid, data.session_name, data.token);
-			$state.go('home');
+			$state.go('home.nearby');
 		}).error(function (data, status, headers, config) {
 			if(data) {
                 console.log(data);
@@ -103,47 +106,150 @@ angular.module('supersaver.services', ['ionic.utils'])
 		$http({
 			url: token_url,
 			method: 'GET',
+			withCredentials: true
 		}).then(function (data) {
 			o.token = data.data;
 			console.log(o.token);
+			return data.data;
 		});
 	}
 
 	return o;
 })
 
-.factory('Clients', function($http, $q) {
-	var o = {
-		client: 'client'
+/**
+ * Main service for handling client list based on geolocation
+ */
+.factory('NearBySrv', function ($http, $q, $cordovaGeolocation, $localstorage, $ionicSlideBoxDelegate, SERVER) {
+	var o = {}
+
+	o.fetchCurrentLocale = function () {
+		console.log('fetching location');
+		var coordinates = {
+			lat: '',
+			long: ''
+		}
+
+		var posOptions = {timeout: 10000, enableHighAccuracy: false, maximumAge: 100000};
+	  	return $cordovaGeolocation
+		    .getCurrentPosition(posOptions)
+		    .then(function (position) {
+		      coordinates.lat  = position.coords.latitude;
+		      coordinates.long = position.coords.longitude;
+
+		      return coordinates;
+		    }, function (err) {
+		      // error
+		      console.log(err);
+		      return $q.reject(err);
+		    });
+	}
+
+	o.fetchNearbyClients = function (location) {
+		console.log(location);
+		var url_string = '';
+		var user = $localstorage.getObject('user');
+		console.log('are we in here?');
+		if (!location) {
+			console.log('no location');
+			url_string = SERVER.url+'client/client';
+		} else {
+			console.log('yes location');
+			url_string = SERVER.url+'client/client?lat='+location.lat+'&long='+location.long+'&range=5';
+		}
+		return $http({
+				url: url_string,
+				withCredentials: true,
+				method: 'GET',
+				headers: {
+					'X-CSRF-Token': user.token,
+					'Accept': 'application/json'
+				}
+				}).then(function (response) {
+						console.log('i be up in here...');
+						console.table(response);
+						if (typeof response.data === 'object') {
+							return response.data;
+							$ionicSlideBoxDelegate.update();
+						} else {
+							console.log("Source data: ");
+							console.log(response.data);
+							//invalid response
+							return $q.reject(response.data);
+						}
+					},function (response) {
+						// an error happened
+						return $q.reject(response.data);
+					});
 	}
 
 	return o;
 })
 
-.factory('NearBy', function($http, $q, Clients) {
+/**
+ * Service for building client and related coupon listings.
+ */
+.factory('Client', function ($http, $q, $localstorage, SERVER) {
 	var o = {
-		content: 'hello'
+		user: $localstorage.getObject('user')
+	}
+
+	o.fetchClient = function (clientId) {
+		var url_string = SERVER.url+'client/deals?client_id='+clientId;
+		return $http({
+				url: url_string,
+				withCredentials: true,
+				method: 'GET',
+				headers: {
+					'X-CSRF-Token': o.user.token,
+					'Accept': 'application/json'
+				}
+			}).then(function (response) {
+				if (typeof response.data === 'object') {
+					return response.data;
+				} else {
+					return $q.reject(response.data);
+				}
+			}, function (response) {
+				// an error happened
+				return $q.reject(response.data);
+			});
 	}
 
 	return o;
 })
 
-.factory('Featured', function($http, $q) {
+/**
+ * Service for retrieving single coupon info
+ */
+.factory('Coupon', function ($http, $q, $localstorage, SERVER) {
 	var o = {
-		content: 'hello'
+		user: $localstorage.getObject('user')
+	}
+
+	o.fetchCoupon = function (couponId) {
+		var url_string = SERVER.url+'client/coupon?coupon_id='+couponId;
+		return $http({
+			url: url_string,
+			withCredentials: true,
+			method: 'GET',
+			headers: {
+				'X-CSRF-Token': o.user.token,
+				'Accept': 'application/json'
+			}
+		}).then(function (response) {
+			if (typeof response.data === 'object') {
+				return response.data;
+			} else {
+				return $q.reject(response.data);
+			}
+		}, function (response) {
+			return $q.reject(response.data);
+		});
 	}
 
 	return o;
 })
-
-.factory('YourDeals', function($http, $q) {
-	var o = {
-		content: 'hello'
-	}
-
-	return o;
-})
-
 
 
 

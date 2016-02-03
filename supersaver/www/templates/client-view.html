@@ -1,0 +1,66 @@
+<ion-view title="Client" class="client-view">
+    <ion-side-menus>
+
+      <ion-side-menu side="left">
+        <header class="bar bar-header bar-stable">
+          <h2>Main Menu</h2>
+        </header>
+        <ion-content class="has-header">
+          <ion-list>
+            <ion-item menu-close href="#/home">Home</ion-item>
+            <ion-item menu-close href="#/search">Find Deals</ion-item>
+            <ion-item menu-close href="#/user/history">Your Deals</ion-item>
+            <ion-item menu-close href="#/user/favorites">Your Favorites</ion-item>
+          </ion-list>
+        </ion-content>
+      </ion-side-menu>
+
+      <ion-side-menu-content>
+
+        <ion-nav-bar class="bar-stable">
+          <ion-nav-buttons side="left">
+            <button class="button back-button buttons button-clear header-item" ng-click="goBack()">
+      			<i class="icon ion-ios-arrow-back"> Back</i> 
+    		</button>
+          </ion-nav-buttons>
+          <ion-nav-buttons side="right">
+            <button side="right" menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+      	  </ion-nav-buttons>
+        </ion-nav-bar>
+        <ion-content scroll="true">
+        	<div class="list-header card">
+        		<div class="client-image item">
+        			<img ng-src="{{ header.client_image }}">
+        		</div>
+        		<div class="client-name item">
+        			{{ header.client_name }}
+        		</div>
+        		<div class="client-info">
+        			{{ header.client_info }}
+        		</div>
+        		<div class-"client-deal-count">
+        			Deals Available: {{ header.client_deal_count }}
+        		</div>
+			    <div class="item tabs tabs-secondary tabs-icon-left">
+			        <a class="tab-item" ng-click="addFavorite(header.client_id)">
+			          <i class="icon ion-heart"></i>
+			          Favorite
+			        </a>
+			    </div>
+        	</div>
+        	<div class="list card">
+        		<div class="item" ng-repeat="coupon in dealList track by $index">
+        			<a href="#/coupon?coupon_id={{coupon.coupon_id}}" class="item">
+        				<div class="coupon-list-image">
+        					<img ng-src="{{ coupon.coupon_image }}">
+        				</div>
+        				<div class="coupon-list-info">
+        					{{coupon.coupon_info}}
+        				</div>
+        			</a>
+        		</div>
+        	</div>
+    	</ion-content>
+      </ion-side-menu-content>
+    </ion-side-menus>
+</ion-view>

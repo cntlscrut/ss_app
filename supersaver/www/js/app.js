@@ -6,6 +6,7 @@
 angular.module('supersaver', ['ionic', 'supersaver.controllers'])
 
 .run(function($ionicPlatform) {
+  /**
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -21,6 +22,7 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
       StatusBar.styleDefault();
     }
   });
+**/
 })
 /**
  * '/' will be the eventual splash page for authentication
@@ -36,7 +38,7 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
     onEnter: function ($state, User) {
       User.checkSession().then(function (hasSession) {
         console.log("Session Check: "+hasSession);
-        if (hasSession) $state.go('home');
+        if (hasSession) $state.go('home.nearby');
       });
     }
   })
@@ -44,18 +46,10 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
   // set up the landing page at /home
   .state('home', {
     url: '/home',
-    views: {
-      '': {
-        templateUrl: 'templates/home-view.html',
-        controller: 'HomeCtrl'
-      },
-      'home-nearby@home': {
-        templateUrl: 'templates/home-nearby-view.html',
-        controller: 'NearByCtrl'
-      }
-    },
-    //templateUrl: 'templates/home-view.html',
-    //controller: 'HomeCtrl',
+    abstract: true,
+    cache:false,
+    templateUrl: 'templates/home-view.html',
+    controller: 'TabsCtrl',
     // don't load the state until we've populated our User, if necessary.
     resolve: {
       populateSession: function(User) {
@@ -69,13 +63,41 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
       });
     }
   })
-/**
-  .state('nearBy', {
+
+  .state('home.nearby', {
     url: '/nearby',
-    templateUrl: 'templates/home-nearby-view.html',
-    controller: 'NearByCtrl'
+    cache:false,
+    views: {
+      'tabs-nearby': {
+        templateUrl: 'templates/home-nearby-view.html',
+        controller: 'HomeCtrl'
+      }
+    }
   })
 
+  .state('home.featured', {
+    url: '/featured',
+    views: {
+      'tabs-featured': {
+        templateUrl: 'templates/home-featured-view.html'
+      }
+    }
+  })
+
+  .state('client', {
+    url: '/client?client_id',
+    templateUrl: 'templates/client-view.html',
+    controller: 'ClientCtrl',
+    cache: false
+  })
+
+  .state('coupon', {
+    url: '/coupon?coupon_id',
+    templateUrl: 'templates/coupon-view.html',
+    controller: 'CouponCtrl',
+    cache: false
+  })
+/**
   // setup of the main view page for search/find deals
   .state('search', {
     url: '/search',
@@ -116,6 +138,15 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
   $urlRouterProvider.otherwise('/');
 })
 
+.directive('repeatDone', function () {
+   return function (scope, element, attrs) {
+     if (scope.$last) { // all are rendered
+        console.log('hit the last element');
+       scope.$eval(attrs.repeatDone);
+     }
+   }
+})
+
 .config(['$httpProvider', function($httpProvider) {
   $httpProvider.defaults.withCredentials = true;
   delete $httpProvider.defaults.headers.common['X-Requested-With'];
@@ -124,11 +155,7 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
 //basic server information
 .constant('SERVER', {
   url: 'http://localhost:8888/'
-})
-
-//set the values for the menu pages
-.constant('MENU', {
-
+  //url: 'http://102.168.0.122:8888/'
 })
 
 
