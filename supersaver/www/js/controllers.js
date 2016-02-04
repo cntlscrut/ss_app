@@ -93,7 +93,7 @@ angular.module('supersaver.controllers', ['ionic', 'ngCordova', 'supersaver.serv
 /**
  * Controller for the main client view
  */
- .controller('ClientCtrl', function ($scope, $stateParams, $ionicHistory, Client) {
+ .controller('ClientCtrl', function ($scope, $stateParams, $ionicHistory, Client, Favorites) {
  	// init
  	$scope.hello = 'hello';
  	$scope.clientId = $stateParams.client_id;
@@ -109,8 +109,23 @@ angular.module('supersaver.controllers', ['ionic', 'ngCordova', 'supersaver.serv
  		$ionicHistory.goBack();
  	}
 
- 	$scope.addFavorite = function (clientId) {
- 		alert('Favorite Added');
+ 	$scope.toggleFavorite = function (clientId) {
+ 		// use clicks button to swap value be it add or remove item in favorites list
+ 		$scope.header.favorited = !$scope.header.favorited;
+
+ 		if ($scope.header.favorited) {
+ 			Favorites.addFavorite(clientId)
+ 				.then(function (isFavorited) {
+ 					alert(isFavorited.message);
+ 					$scope.header.favorited = isFavorited.favorited;
+ 				});
+ 		} else {
+ 			Favorites.removeFavorite(clientId)
+ 				.then(function (isFavorited) {
+ 					alert(isFavorited.message);
+ 					$scope.header.favorited = isFavorited.favorited;
+ 				});
+ 		}
  	}
  })
 

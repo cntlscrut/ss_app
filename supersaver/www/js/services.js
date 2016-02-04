@@ -251,6 +251,59 @@ angular.module('supersaver.services', ['ionic.utils'])
 	return o;
 })
 
+/**
+ *
+ */
+.factory('Favorites', function ($http, $q, $localstorage, SERVER) {
+	var o = {
+		user: $localstorage.getObject('user')
+	}
+
+	o.addFavorite = function (clientId) {
+		var url_string = SERVER.url+'client/user_favorites?op=add&uid='+o.user.uid+'&cid='+clientId;
+		return $http({
+			url: url_string,
+			withCredentials: true,
+			method: 'GET',
+			headers: {
+				'X-CSRF-Token': o.user.token,
+				'Accept': 'application/json'
+			}
+		}).then(function (response) {
+			if (typeof response.data === 'object') {
+				return response.data;
+			} else {
+				$q.reject(response.data);
+			}
+		}, function (response) {
+			$q.reject(response.data);
+		});
+	}
+
+	o.removeFavorite = function (clientId) {
+		var url_string = SERVER.url+'client/user_favorites?op=remove&uid='+o.user.uid+'&cid='+clientId;
+		return $http({
+			url: url_string,
+			withCredentials: true,
+			method: 'GET',
+			headers: {
+				'X-CSRF-Token': o.user.token,
+				'Accept': 'application/json'
+			}
+		}).then(function (response) {
+			if (typeof response.data === 'object') {
+				return response.data;
+			} else {
+				$q.reject(response.data);
+			}
+		}, function (response) {
+			$q.reject(response.data);
+		});
+	}
+
+	return o;
+})
+
 
 
 

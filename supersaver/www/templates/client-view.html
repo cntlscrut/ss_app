@@ -41,11 +41,8 @@
         		<div class-"client-deal-count">
         			Deals Available: {{ header.client_deal_count }}
         		</div>
-			    <div class="item tabs tabs-secondary tabs-icon-left">
-			        <a class="tab-item" ng-click="addFavorite(header.client_id)">
-			          <i class="icon ion-heart"></i>
-			          Favorite
-			        </a>
+			    <div class="item">
+			        <a class="button button-icon icon" ng-class="header.favorited ? 'ion-ios-heart' : 'ion-ios-heart-outline'" ng-click="toggleFavorite(header.client_id)">{{ header.favorited ? " Remove From Favorites" : " Add To Favorites" }}</a>
 			    </div>
         	</div>
         	<div class="list card">
