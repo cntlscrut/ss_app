@@ -97,6 +97,13 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
     controller: 'CouponCtrl',
     cache: false
   })
+
+  .state('favorites', {
+    url: "/favorites",
+    templateUrl: 'templates/favorites-view.html',
+    controller: 'FavoritesCtrl',
+    cache: false
+  })
 /**
   // setup of the main view page for search/find deals
   .state('search', {

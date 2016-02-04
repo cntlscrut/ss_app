@@ -259,6 +259,27 @@ angular.module('supersaver.services', ['ionic.utils'])
 		user: $localstorage.getObject('user')
 	}
 
+	o.getFavoritesList = function () {
+		var url_string = SERVER.url+'client/user_favorites?op=list&uid='+o.user.uid;
+		return $http({
+			url: url_string,
+			withCredentials: true,
+			method: 'GET',
+			headers: {
+				'X-CSRF-Token': o.user.token,
+				'Accept': 'application/json'
+			}
+		}).then(function (response) {
+			if (typeof response.data === 'object') {
+				return response.data;
+			} else {
+				$q.reject(response.data);
+			}
+		}, function (response) {
+			$q.reject(response.data);
+		});
+	}
+
 	o.addFavorite = function (clientId) {
 		var url_string = SERVER.url+'client/user_favorites?op=add&uid='+o.user.uid+'&cid='+clientId;
 		return $http({

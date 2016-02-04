@@ -10,8 +10,8 @@
           <ion-list>
             <ion-item menu-close href="#/home">Home</ion-item>
             <ion-item menu-close href="#/search">Find Deals</ion-item>
-            <ion-item menu-close href="#/user/history">Your Deals</ion-item>
-            <ion-item menu-close href="#/user/favorites">Your Favorites</ion-item>
+            <ion-item menu-close href="#/history">Your Deals</ion-item>
+            <ion-item menu-close href="#/favorites">Your Favorites</ion-item>
           </ion-list>
         </ion-content>
       </ion-side-menu>
@@ -19,8 +19,10 @@
       <ion-side-menu-content>
 
         <ion-nav-bar class="bar-stable">
-          <ion-nav-buttons >
-            <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+          <ion-nav-buttons side="left" >
+            <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>  
+          </ion-nav-buttons>
+          <ion-nav-buttons side="right">
             <button side="right" class="button" ng-click="logOut()">Log Out</button>
           </ion-nav-buttons>
         </ion-nav-bar>

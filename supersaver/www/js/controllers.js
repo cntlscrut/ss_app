@@ -116,13 +116,13 @@ angular.module('supersaver.controllers', ['ionic', 'ngCordova', 'supersaver.serv
  		if ($scope.header.favorited) {
  			Favorites.addFavorite(clientId)
  				.then(function (isFavorited) {
- 					alert(isFavorited.message);
+ 					//alert(isFavorited.message);
  					$scope.header.favorited = isFavorited.favorited;
  				});
  		} else {
  			Favorites.removeFavorite(clientId)
  				.then(function (isFavorited) {
- 					alert(isFavorited.message);
+ 					//alert(isFavorited.message);
  					$scope.header.favorited = isFavorited.favorited;
  				});
  		}
@@ -146,6 +146,41 @@ angular.module('supersaver.controllers', ['ionic', 'ngCordova', 'supersaver.serv
  		$state.go('client', {'client_id': client_id});
  	}
 })
+
+/**
+ * Controller for the user favorites view
+ */
+.controller('FavoritesCtrl', function ($scope, $state, Favorites, $ionicListDelegate) {
+	$scope.hello = 'hello favorites view';
+
+	$scope.data = {
+		showDelete: false
+	}
+
+	$scope.goBack = function () {
+		$state.go('home.nearby');
+	}
+
+	$scope.removeItem = function (item) {
+		Favorites.removeFavorite(item.fav_id)
+			.then(function (isFavorited) {
+				console.log(isFavorited.favorited);
+				if (!isFavorited.favorited) {
+					// remove the item from the list
+					$scope.favoritesList.splice($scope.favoritesList.indexOf(item), 1);
+					// close the open option buttons
+					$ionicListDelegate.closeOptionButtons();
+				}
+			});
+	}
+
+	Favorites.getFavoritesList()
+		.then(function (list) {
+			$scope.favoritesList = list;
+			console.log($scope.favoritesList);
+		});
+})
+
 /**
  * Controller for the search view
  */
@@ -169,13 +204,6 @@ angular.module('supersaver.controllers', ['ionic', 'ngCordova', 'supersaver.serv
 	$scope.client = Clients.client;
 })
 
-/**
- * Controller for the user favorites view
- */
-.controller('FavoritesCtrl', function($scope, Clients) {
-	$scope.hello = 'hello favorites view';
-	$scope.client = Clients.client;
-})
 
 
 
