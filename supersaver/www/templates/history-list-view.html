@@ -1,0 +1,39 @@
+<ion-view view-title="Deals History" class="history-page">
+	<ion-side-menus>
+		<ion-side-menu side="left">
+			<header class="bar bar-header bar-stable">
+				<h2>Main Menu</h2>
+			</header>
+			<ion-content class="has-header">
+				<ion-list>
+					<ion-item menu-close href="#/home">Home</ion-item>
+					<ion-item menu-close href="#/search">Find Deals</ion-item>
+					<ion-item menu-close href="#/history">Your Deals</ion-item>
+					<ion-item menu-close href="#/favorites">Your Favorites</ion-item>
+				</ion-list>
+			</ion-content>
+		</ion-side-menu>
+		<ion-side-menu-content>
+        <ion-nav-bar class="bar-stable">
+          <ion-nav-buttons side="left">
+            <button class="button back-button buttons button-clear header-item" ng-click="goBack()">
+      			<i class="icon ion-ios-home-outline"> Home</i> 
+    		</button>
+          </ion-nav-buttons>
+          <ion-nav-buttons side="right">
+            <button side="right" menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+      	  </ion-nav-buttons>
+        </ion-nav-bar>
+			<ion-content>
+				<ion-list>
+					<ion-item  ng-repeat="item in dealList"
+						href="#"
+						item="item"
+						class="item-remove-animate">
+						{{ item.client_name }}	Deals Used: {{ item.deal_count }} <i style="float:right;" class="ion-ios-arrow-forward"></i>
+					</ion-item>
+				</ion-list>
+			</ion-content>
+		</ion-side-menu-content>
+	</ion-side-menus>
+</ion-view>

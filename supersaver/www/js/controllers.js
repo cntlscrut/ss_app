@@ -3,18 +3,40 @@ angular.module('supersaver.controllers', ['ionic', 'ngCordova', 'supersaver.serv
 /**
  * controller for the user
  */
-.controller('UserCtrl', function($scope, User) {
+.controller('UserCtrl', function ($scope, $state, User) {
 	$scope.user = 'user';
 	$scope.submitForm = function (username, password) {
-		User.login(username, password);
+		console.log('Creating session');
+		User.getToken()
+			.then(function (token) {
+				console.log('Session Token: '+token);
+				User.login(username, password, token)
+					.then(function (sessionData) {
+						console.log('Setting session');
+						User.setSession(sessionData);
+						$state.go('home.nearby');
+					}, function (sessionData) {
+						alert('Unable To Create Session 1');
+					});
+			}, function (token) {
+				alert('Unable To Create Session 2');
+			});
 	}
 })
 
-.controller('TabsCtrl', function($scope, $window, User) {
+.controller('TabsCtrl', function ($scope, $state, User) {
 	//
 	$scope.logOut = function () {
-		User.destroySession();
-		$window.location.href="/";
+		console.log('Destroying the session...');
+		User.destroySession()
+			.then(function (isLoggedOut) {
+				console.log(isLoggedOut);
+				if (isLoggedOut) {
+					$state.go('splash');
+				}
+			}, function (isLoggedOut) {
+				console.log('could not log out');
+			});
 	}
 })
 
@@ -22,7 +44,7 @@ angular.module('supersaver.controllers', ['ionic', 'ngCordova', 'supersaver.serv
 /**
  * Controller for the home view
  */
-.controller('HomeCtrl', function($scope, $timeout, $window, $ionicSlideBoxDelegate, User, NearBySrv) {
+.controller('HomeCtrl', function ($scope, $timeout, $window, $ionicSlideBoxDelegate, User, NearBySrv) {
 	$ionicSlideBoxDelegate.enableSlide(true);
 
 	$scope.hello = 'hello home view';
@@ -93,7 +115,7 @@ angular.module('supersaver.controllers', ['ionic', 'ngCordova', 'supersaver.serv
 /**
  * Controller for the main client view
  */
- .controller('ClientCtrl', function ($scope, $stateParams, $ionicHistory, Client, Favorites) {
+ .controller('ClientCtrl', function ($scope, $state, $stateParams, $ionicHistory, $ionicPopup, Client, Favorites, UserHistory) {
  	// init
  	$scope.hello = 'hello';
  	$scope.clientId = $stateParams.client_id;
@@ -126,6 +148,28 @@ angular.module('supersaver.controllers', ['ionic', 'ngCordova', 'supersaver.serv
  					$scope.header.favorited = isFavorited.favorited;
  				});
  		}
+ 	}
+
+ 	$scope.useCoupon = function (coupon) {
+ 		var confirmPopup = $ionicPopup.confirm({
+ 			title: 'Confirm Use Coupon',
+ 			template: 'Clicking OK will confirm the use of this deal.<br>You have '+coupon.coupon_uses+' uses left.'
+ 		});
+
+ 		confirmPopup.then(function (res) {
+ 			if (res) {
+ 				console.log('confirm use');
+ 				UserHistory.useCoupon(coupon.coupon_id)
+ 					.then(function (data) {
+ 						console.log(data.success);
+ 						$scope.useSuccess = data.success;
+ 						$scope.message = data.message;
+ 						$state.go('coupon', { coupon_id: coupon.coupon_id });
+ 					});
+ 			} else {
+ 				console.log('canceled use');
+ 			}
+ 		});
  	}
  })
 
@@ -182,6 +226,19 @@ angular.module('supersaver.controllers', ['ionic', 'ngCordova', 'supersaver.serv
 })
 
 /**
+ * Controller for the user history view
+ */
+.controller('HistoryCtrl', function($scope, UserHistory) {
+	$scope.hello = 'hello history view';
+
+	UserHistory.getHistory(false)
+		.then(function (dealList) {
+			$scope.dealList = dealList;
+			console.table($scope.dealList);
+		});
+})
+
+/**
  * Controller for the search view
  */
 .controller('SearchCtrl', function($scope) {
@@ -196,13 +253,6 @@ angular.module('supersaver.controllers', ['ionic', 'ngCordova', 'supersaver.serv
 	// nothing here quite yet.
 })
 
-/**
- * Controller for the user history view
- */
-.controller('HistoryCtrl', function($scope) {
-	$scope.hello = 'hello history view';
-	$scope.client = Clients.client;
-})
 
 
 

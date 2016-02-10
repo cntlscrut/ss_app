@@ -104,6 +104,13 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
     controller: 'FavoritesCtrl',
     cache: false
   })
+
+  .state('history', {
+    url: '/history',
+    templateUrl: 'templates/history-list-view.html',
+    controller: 'HistoryCtrl',
+    cache: false
+  })
 /**
   // setup of the main view page for search/find deals
   .state('search', {

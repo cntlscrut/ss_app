@@ -46,15 +46,18 @@
 			    </div>
         	</div>
         	<div class="list card">
-        		<div class="item" ng-repeat="coupon in dealList track by $index">
-        			<a href="#/coupon?coupon_id={{coupon.coupon_id}}" class="item">
+        		<div class="item" ng-repeat="coupon in dealList" ng-click="useCoupon(coupon)">
+        			<!--<a href="#/coupon?coupon_id={{coupon.coupon_id}}" class="item">-->
         				<div class="coupon-list-image">
         					<img ng-src="{{ coupon.coupon_image }}">
         				</div>
         				<div class="coupon-list-info">
         					{{coupon.coupon_info}}
         				</div>
-        			</a>
+        				<div class="coupon-list-uses">
+        					{{ coupon.coupon_uses }} Uses Available
+        				</div>
+        			<!--</a>-->
         		</div>
         	</div>
     	</ion-content>

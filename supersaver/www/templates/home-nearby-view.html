@@ -3,7 +3,7 @@
 	  <ion-slide ng-repeat="item in groups.nearBy.items track by $index" repeat-done="repeatDone()">
 	    <ion-content scroll='false'>
 		    <a href="#/client?client_id={{ item.client_id }}">
-		      <div class="card">
+		      <div class="card home-view-card">
 		        <div class="item">
 		          <img ng-src="{{ item.client_image }}">
 		        </div>
