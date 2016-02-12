@@ -43,6 +43,15 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
     }
   })
 
+  /**
+   * state view for user registration
+   */
+  .state('register', {
+    url: '/register',
+    templateUrl: 'templates/user-register.html',
+    controller: 'UserRegisterCtrl',
+  })
+
   // set up the landing page at /home
   .state('home', {
     url: '/home',

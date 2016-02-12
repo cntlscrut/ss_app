@@ -24,6 +24,14 @@ angular.module('supersaver.controllers', ['ionic', 'ngCordova', 'supersaver.serv
 	}
 })
 
+.controller('UserRegisterCtrl', function ($scope, $state, User) {
+	$scope.hello = 'hello';
+
+	$scope.submitForm = function (username, email, password, password2) {
+		alert('Submitting form...');
+	}
+})
+
 .controller('TabsCtrl', function ($scope, $state, User) {
 	//
 	$scope.logOut = function () {

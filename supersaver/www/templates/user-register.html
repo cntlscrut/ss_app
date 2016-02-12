@@ -1,0 +1,38 @@
+<ion-view view-title="SuperSaver" class="splash-page" hide-nav-bar="true">
+	<ion-content scroll="false">
+		<div class="padding logo">
+			<h2>SuperSaver Coupon</h2>
+		</div>
+		<div class="padding sub-header">
+			<h4>Create Account</h4>
+		</div>
+
+		<div class="login-form">
+			<div class="card">
+				<div class="list">
+					<label class="item item-input">
+						<input type="text" ng-model="form.username" placeholder="Enter a Username..." >
+					</label>
+					<label class="item item-input">
+						<input type="email" ng-model="form.email" placeholder="Enter your email address" >
+					</label>
+					<label class="item item-input">
+						<input type="text" ng-model="form.password" placeholder="Password">
+					</label>
+					<label class="item item-input">
+						<input type="text" ng-model="form.password2" placeholder="Re-enter the Password">
+					</label>
+				</div>
+			</div>
+
+			<div class="padding-left padding-right">
+				<button class="button button-block action-button button-positive" ng-click="submitForm(form.username, form.email, form.password, form.password2)">
+					Create Account
+				</button>
+			</div>
+			<div class="padding-left padding-right">
+				Already have an account? <a href="#/">Sign In!</a>
+			</div>
+		</div>
+	</ion-content>
+</ion-view>
