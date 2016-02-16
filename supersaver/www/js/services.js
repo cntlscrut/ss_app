@@ -3,13 +3,44 @@ angular.module('supersaver.services', ['ionic.utils'])
 /**
  * Main service for handling user authentication
  */
-.factory('User', function ($http, $q, $localstorage, $state, SERVER) {
+.factory('User', function ($http, $q, $localstorage, $window, $ionicHistory, $state, SERVER) {
 	var o = {
 		username: false,
 		uid: false,
 		session_id: false,
 		session_name: false,
 		token: false
+	}
+
+	// register a new user with the server
+	o.register = function (username, email, password, password2, token) {
+		var url_string = SERVER.url+'client/user/register';
+		//var postData = {
+		//	name: username,
+		//	mail: email,
+		//	pass: password,
+		//	pass2: password2
+		//}
+		var postData = "name="+encodeURIComponent(username)+"&mail="+encodeURIComponent(email)+"&pass="+encodeURIComponent(password)+"&pass2="+encodeURIComponent(password2);
+
+		return $http({
+			url: url_string,
+			method: 'POST',
+			withCredentials: true,
+			data: postData,
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+				'X-CSRF-Token': token
+			}
+		}).then(function (response) {
+			console.log('Creating user...');
+			console.table(response);
+			return response;
+		}, function (response) {
+			console.log('Could not create user account.');
+			console.table(response);
+			return $q.reject(response);
+		});
 	}
 
 	// get the authorization token from the server for handshake
@@ -70,8 +101,13 @@ angular.module('supersaver.services', ['ionic.utils'])
 		//console.table(sessionData);
 
 		//map to the service object
-		if (sessionData.user.uid) o.uid = sessionData.user.uid;
-		if (sessionData.user.name) o.username = sessionData.user.name;
+		if (typeof sessionData.user === 'object') {
+			if (sessionData.user.uid) o.uid = sessionData.user.uid;
+			if (sessionData.user.name) o.username = sessionData.user.name;
+		} else {
+			if (sessionData.uid) o.uid = sessionData.uid;
+			if (sessionData.username) o.username = sessionData.username;
+		}
 		if (sessionData.sessid) o.session_id = sessionData.sessid;
 		if (sessionData.session_name) o.session_name = sessionData.session_name;
 		if (sessionData.token) o.token = sessionData.token;
@@ -98,10 +134,11 @@ angular.module('supersaver.services', ['ionic.utils'])
 	      // detect if there's a session in localstorage from previous use.
 	      // if it is, pull into our service
 	      var user = $localstorage.getObject('user');
-	      console.log(user);
+	      console.log('Checking session object...');
+	      console.table(user);
 	      if (user.username) {
 	        // if there's a user, lets grab their favorites from the server
-	        o.setSession(user.username, user.uid, user.session_id, user.session_name, user.token);
+	        o.setSession(user);
 	        defer.resolve(true);
 
 	      } else {
@@ -137,13 +174,16 @@ angular.module('supersaver.services', ['ionic.utils'])
 				o.session_name = false;
 				o.token = false;
 				$localstorage.setObject('user', {});
+				$window.localStorage.clear();
+			    $ionicHistory.clearCache();
+			    $ionicHistory.clearHistory();
 				return response.data;
 			} else {
 				return $q.reject(response.data);
 			}
 		}, function (response) {
 			console.table(response);
-			return $q.reject(reponse.data);
+			return $q.reject(response.data);
 		});
 	}
 
@@ -182,6 +222,7 @@ angular.module('supersaver.services', ['ionic.utils'])
 		console.log(location);
 		var url_string = '';
 		var user = $localstorage.getObject('user');
+		console.table(user);
 		console.log('are we in here?');
 		if (!location) {
 			console.log('no location');
@@ -200,7 +241,7 @@ angular.module('supersaver.services', ['ionic.utils'])
 				}
 				}).then(function (response) {
 						console.log('i be up in here...');
-						console.table(response);
+						//console.table(response);
 						if (typeof response.data === 'object') {
 							return response.data;
 							$ionicSlideBoxDelegate.update();
@@ -228,13 +269,14 @@ angular.module('supersaver.services', ['ionic.utils'])
 	}
 
 	o.fetchClient = function (clientId) {
+		var user = $localstorage.getObject('user');
 		var url_string = SERVER.url+'client/deals?client_id='+clientId;
 		return $http({
 				url: url_string,
 				withCredentials: true,
 				method: 'GET',
 				headers: {
-					'X-CSRF-Token': o.user.token,
+					'X-CSRF-Token': user.token,
 					'Accept': 'application/json'
 				}
 			}).then(function (response) {
@@ -261,13 +303,14 @@ angular.module('supersaver.services', ['ionic.utils'])
 	}
 
 	o.fetchCoupon = function (couponId) {
+		var user = $localstorage.getObject('user');
 		var url_string = SERVER.url+'client/coupon?coupon_id='+couponId;
 		return $http({
 			url: url_string,
 			withCredentials: true,
 			method: 'GET',
 			headers: {
-				'X-CSRF-Token': o.user.token,
+				'X-CSRF-Token': user.token,
 				'Accept': 'application/json'
 			}
 		}).then(function (response) {
@@ -293,13 +336,14 @@ angular.module('supersaver.services', ['ionic.utils'])
 	}
 
 	o.getFavoritesList = function () {
-		var url_string = SERVER.url+'client/user_favorites?op=list&uid='+o.user.uid;
+		var user = $localstorage.getObject('user');
+		var url_string = SERVER.url+'client/user_favorites?op=list&uid='+user.uid;
 		return $http({
 			url: url_string,
 			withCredentials: true,
 			method: 'GET',
 			headers: {
-				'X-CSRF-Token': o.user.token,
+				'X-CSRF-Token': user.token,
 				'Accept': 'application/json'
 			}
 		}).then(function (response) {
@@ -314,13 +358,14 @@ angular.module('supersaver.services', ['ionic.utils'])
 	}
 
 	o.addFavorite = function (clientId) {
-		var url_string = SERVER.url+'client/user_favorites?op=add&uid='+o.user.uid+'&cid='+clientId;
+		var user = $localstorage.getObject('user');
+		var url_string = SERVER.url+'client/user_favorites?op=add&uid='+user.uid+'&cid='+clientId;
 		return $http({
 			url: url_string,
 			withCredentials: true,
 			method: 'GET',
 			headers: {
-				'X-CSRF-Token': o.user.token,
+				'X-CSRF-Token': user.token,
 				'Accept': 'application/json'
 			}
 		}).then(function (response) {
@@ -335,13 +380,14 @@ angular.module('supersaver.services', ['ionic.utils'])
 	}
 
 	o.removeFavorite = function (clientId) {
-		var url_string = SERVER.url+'client/user_favorites?op=remove&uid='+o.user.uid+'&cid='+clientId;
+		var user = $localstorage.getObject('user');
+		var url_string = SERVER.url+'client/user_favorites?op=remove&uid='+user.uid+'&cid='+clientId;
 		return $http({
 			url: url_string,
 			withCredentials: true,
 			method: 'GET',
 			headers: {
-				'X-CSRF-Token': o.user.token,
+				'X-CSRF-Token': user.token,
 				'Accept': 'application/json'
 			}
 		}).then(function (response) {
@@ -367,13 +413,14 @@ angular.module('supersaver.services', ['ionic.utils'])
 	}
 
 	o.useCoupon = function (couponId) {
-		var url_string = SERVER.url+'client/user_history?op=use&uid='+o.user.uid+'&cid='+couponId;
+		var user = $localstorage.getObject('user');
+		var url_string = SERVER.url+'client/user_history?op=use&uid='+user.uid+'&cid='+couponId;
 		return $http({
 			url: url_string,
 			withCredentials: true,
 			method: 'GET',
 			headers: {
-				'X-CSRF-Token': o.user.token,
+				'X-CSRF-Token': user.token,
 				'Accept': 'application/json'
 			}
 		}).then(function (response) {
@@ -388,10 +435,13 @@ angular.module('supersaver.services', ['ionic.utils'])
 	}
 
 	o.getHistory = function (clientId) {
+
+		var user = $localstorage.getObject('user');
+
 		if (!clientId) {
-			url_string = SERVER.url+'client/user_history?op=list&uid='+o.user.uid;
+			url_string = SERVER.url+'client/user_history?op=list&uid='+user.uid;
 		} else {
-			url_string = SERVER.url+'client/user_history?op=detail&uid='+o.user.uid+'&cid='+clientId;
+			url_string = SERVER.url+'client/user_history?op=detail&uid='+user.uid+'&cid='+clientId;
 		}
 
 		return $http({
@@ -399,7 +449,7 @@ angular.module('supersaver.services', ['ionic.utils'])
 			withCredentials: true,
 			method: 'GET',
 			headers: {
-				'X-CSRF-Token': o.user.token,
+				'X-CSRF-Token': user.token,
 				'Accept': 'application/json'
 			}
 		}).then(function (response) {

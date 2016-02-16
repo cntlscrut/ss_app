@@ -35,6 +35,7 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
     url: '/',
     templateUrl: 'templates/user-login.html',
     controller: 'UserCtrl',
+    cache: false,
     onEnter: function ($state, User) {
       User.checkSession().then(function (hasSession) {
         console.log("Session Check: "+hasSession);

@@ -24,11 +24,39 @@ angular.module('supersaver.controllers', ['ionic', 'ngCordova', 'supersaver.serv
 	}
 })
 
+/**
+ * User Registration controller
+ *
+ * @TODO: implement angular's native form and some custom validation
+ */
 .controller('UserRegisterCtrl', function ($scope, $state, User) {
 	$scope.hello = 'hello';
 
 	$scope.submitForm = function (username, email, password, password2) {
 		alert('Submitting form...');
+		// check that all the reg values are there.
+		console.log(username);
+		console.log(email);
+		console.log(password);
+		console.log(password2);
+
+		User.getToken()
+			.then(function (token) {
+				User.register(username, email, password, password2, token)
+					.then(function (regSuccess) {
+						console.log('Created user');
+						console.table(regSuccess);
+						if (regSuccess.statusText == 'OK') {
+							User.login(username, password, token)
+								.then(function (sessionData) {
+									User.setSession(sessionData);
+									$state.go('home.nearby');
+								}, function (sessionData) {
+									alert('Unable to successfully login');
+								});
+						}
+					});
+			});
 	}
 })
 
