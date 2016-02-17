@@ -1,5 +1,67 @@
 <ion-view view-title="Search" class="search-page">
-	<ion-content>
-		{{ hello }}, {{ client }}
-	</ion-content>
+	<ion-side-menus>
+		<ion-side-menu side="left">
+			<header class="bar bar-header bar-stable">
+				<h2>Main Menu</h2>
+			</header>
+			<ion-content class="has-header">
+				<ion-list>
+					<ion-item menu-close href="#/home">Home</ion-item>
+					<ion-item menu-close href="#/search">Find Deals</ion-item>
+					<ion-item menu-close href="#/history">Your Deals</ion-item>
+					<ion-item menu-close href="#/favorites">Your Favorites</ion-item>
+				</ion-list>
+			</ion-content>
+		</ion-side-menu>
+		<ion-side-menu-content>
+        <ion-nav-bar class="bar-stable">
+          <ion-nav-buttons side="left">
+            <button class="button back-button buttons button-clear header-item" ng-click="goBack()">
+      			<i class="icon ion-ios-home-outline"> Home</i> 
+    		</button>
+          </ion-nav-buttons>
+          <ion-nav-buttons side="right">
+            <button side="right" menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+      	  </ion-nav-buttons>
+        </ion-nav-bar>
+			<ion-content>
+				<h4>Find Deals</h4>
+				<div class="search-form">
+					<div class="card">
+						<div class="list">
+							<label class="item item-input">
+								<input type="text" ng-model="form.searchKeyword" placeholder="Enter a search term...">
+							</label>
+						</div>
+					</div>
+					<div class="padding-left padding-right">
+						<button class="button button-block action-button button-positive" ng-click="submitSearch(form.searchKeyword)">
+						Search
+						</button>
+					</div>
+				</div>
+				<div class="results-wrapper" ng-show="results">
+					<div class="result-count">
+						Found {{ resultsCount }} results for "{{ searchKeyword }}"
+					</div>
+					<div class="results-list list card">
+						<div class="item" ng-repeat="result in results">
+							<div class="coupon-list-image">
+								an eventual image
+							</div>
+							<div class="coupon-list-title">
+								{{ result.coupon_title }}
+							</div>
+							<div class="coupon-list-info">
+								{{ result.coupon_summary }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="no-results-message" ng-hide="results">
+					No Results...	
+				</div>
+			</ion-content>
+		</ion-side-menu-content>
+	</ion-side-menus>
 </ion-view>

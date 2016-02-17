@@ -121,14 +121,14 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
     controller: 'HistoryCtrl',
     cache: false
   })
-/**
+
   // setup of the main view page for search/find deals
   .state('search', {
     url: '/search',
     templateUrl: 'templates/search-view.html',
     controller: 'SearchCtrl'
   })
-
+/**
   //create the top abstract page
   .state('user', {
     url: '/user',

@@ -232,6 +232,7 @@ angular.module('supersaver.controllers', ['ionic', 'ngCordova', 'supersaver.serv
  */
 .controller('FavoritesCtrl', function ($scope, $state, Favorites, $ionicListDelegate) {
 	$scope.hello = 'hello favorites view';
+	$scope.hasFavorites = true;
 
 	$scope.data = {
 		showDelete: false
@@ -257,7 +258,11 @@ angular.module('supersaver.controllers', ['ionic', 'ngCordova', 'supersaver.serv
 	Favorites.getFavoritesList()
 		.then(function (list) {
 			$scope.favoritesList = list;
-			console.log($scope.favoritesList);
+			if (list.length > 0) {
+				$scope.hasFavorites = true;
+			} else {
+				$scope.hasFavorites = false;
+			}
 		});
 })
 
@@ -277,9 +282,21 @@ angular.module('supersaver.controllers', ['ionic', 'ngCordova', 'supersaver.serv
 /**
  * Controller for the search view
  */
-.controller('SearchCtrl', function($scope) {
+.controller('SearchCtrl', function($scope, Search) {
 	$scope.hello = 'hello search view';
-	$scope.client = Clients.client;
+	$scope.resultsCount = 0;
+
+	$scope.submitSearch = function (keyword) {
+		Search.performSearch(keyword)
+			.then(function (results) {
+				$scope.results = results.results;
+				$scope.resultsCount = results.resultCount;
+				$scope.searchKeyword = keyword;
+				console.log($scope.searchKeyword);
+				console.table(results);
+			});
+
+	}
 })
 
 /**

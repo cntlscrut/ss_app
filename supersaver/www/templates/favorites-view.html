@@ -25,7 +25,7 @@
       	  </ion-nav-buttons>
         </ion-nav-bar>
 			<ion-content>
-				<ion-list>
+				<ion-list ng-show="hasFavorites">
 					<ion-item  ng-repeat="item in favoritesList"
 						href="#/client?client_id={{ item.fav_id }}"
 						item="item"
@@ -37,6 +37,9 @@
           				</ion-option-button>	
 					</ion-item>
 				</ion-list>
+				<div class="no-favorites" ng-hide="hasFavorites">
+					You do not currently have any favorites. 
+				</div>
 			</ion-content>
 		</ion-side-menu-content>
 	</ion-side-menus>

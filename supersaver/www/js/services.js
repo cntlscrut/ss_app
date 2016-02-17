@@ -15,12 +15,7 @@ angular.module('supersaver.services', ['ionic.utils'])
 	// register a new user with the server
 	o.register = function (username, email, password, password2, token) {
 		var url_string = SERVER.url+'client/user/register';
-		//var postData = {
-		//	name: username,
-		//	mail: email,
-		//	pass: password,
-		//	pass2: password2
-		//}
+
 		var postData = "name="+encodeURIComponent(username)+"&mail="+encodeURIComponent(email)+"&pass="+encodeURIComponent(password)+"&pass2="+encodeURIComponent(password2);
 
 		return $http({
@@ -461,6 +456,39 @@ angular.module('supersaver.services', ['ionic.utils'])
 		}, function (response) {
 			$q.reject(response.data);
 		});
+	}
+
+	return o;
+})
+
+/**
+ * Base service for fetching search results for deals
+ */
+.factory('Search', function ($http, $q, $localstorage, SERVER) {
+	var o = {}
+
+	o.performSearch = function (searchKeywords) {
+		var user = $localstorage.getObject('user');
+		var url_string = SERVER.url+'client/search?keywords='+encodeURIComponent(searchKeywords);
+
+		return $http({
+			url: url_string,
+			withCredentials: true,
+			method: 'GET',
+			headers: {
+				'X-CSRF-Token': user.token,
+				'Accept': 'application/json'
+			}
+		}).then(function (response) {
+			if (typeof response.data === 'object') {
+				return response.data;
+			} else {
+				return $q.reject(response.data);
+			}
+		}, function (response) {
+			return $q.reject(response.data);
+		});
+
 	}
 
 	return o;
