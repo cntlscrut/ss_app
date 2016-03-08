@@ -469,7 +469,9 @@ angular.module('supersaver.services', ['ionic.utils'])
 
 	o.performSearch = function (searchKeywords) {
 		var user = $localstorage.getObject('user');
-		var url_string = SERVER.url+'client/search?keywords='+encodeURIComponent(searchKeywords);
+		var url_string = SERVER.url+'client/search?keys='+encodeURIComponent(searchKeywords);
+
+		console.log(url_string);
 
 		return $http({
 			url: url_string,

@@ -289,7 +289,8 @@ angular.module('supersaver.controllers', ['ionic', 'ngCordova', 'supersaver.serv
 	$scope.submitSearch = function (keyword) {
 		Search.performSearch(keyword)
 			.then(function (results) {
-				$scope.results = results.results;
+				$scope.couponResults = results.couponResults;
+				$scope.clientResults = results.clientResults;
 				$scope.resultsCount = results.resultCount;
 				$scope.searchKeyword = keyword;
 				console.log($scope.searchKeyword);

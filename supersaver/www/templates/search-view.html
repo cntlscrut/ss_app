@@ -40,14 +40,33 @@
 						</button>
 					</div>
 				</div>
-				<div class="results-wrapper" ng-show="results">
+				<div class="results-wrapper" ng-show="resultsCount">
 					<div class="result-count">
 						Found {{ resultsCount }} results for "{{ searchKeyword }}"
 					</div>
+					<div class="results-header">
+						Business Results
+					</div>
 					<div class="results-list list card">
-						<div class="item" ng-repeat="result in results">
+						<div class="item" ng-repeat="result in clientResults">
 							<div class="coupon-list-image">
-								an eventual image
+								<img ng-src="{{ result.client_image }}">
+							</div>
+							<div class="coupon-list-title">
+								{{ result.client_title }}
+							</div>
+							<div class="coupon-list-info">
+								{{ result.client_summary }}
+							</div>
+						</div>
+					</div>
+					<div class="results-header">
+						Deal Results
+					</div>
+					<div class="results-list list card">
+						<div class="item" ng-repeat="result in couponResults">
+							<div class="coupon-list-image">
+								<img ng-src="{{ result.coupon_image }}">
 							</div>
 							<div class="coupon-list-title">
 								{{ result.coupon_title }}
@@ -58,7 +77,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="no-results-message" ng-hide="results">
+				<div class="no-results-message" ng-hide="resultsCount">
 					No Results...	
 				</div>
 			</ion-content>

@@ -126,7 +126,8 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
   .state('search', {
     url: '/search',
     templateUrl: 'templates/search-view.html',
-    controller: 'SearchCtrl'
+    controller: 'SearchCtrl',
+    cache: false,
   })
 /**
   //create the top abstract page
@@ -178,8 +179,9 @@ angular.module('supersaver', ['ionic', 'supersaver.controllers'])
 
 //basic server information
 .constant('SERVER', {
-  url: 'http://localhost:8888/'
-  //url: 'http://102.168.0.122:8888/'
+  //url: 'http://localhost:8888/',
+  url: 'http://dev-ss.trantergrey.com/'
+  //url: 'http://192.168.0.122:8888/'
 })
 
 
